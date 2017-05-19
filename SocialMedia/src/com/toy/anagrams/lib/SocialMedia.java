@@ -12,5 +12,6 @@ package com.toy.anagrams.lib;
 public class SocialMedia {
     public static void main (String args []){
         System.out.println("hai");
+        System.out.println("namaku fatma");
     }
 }
