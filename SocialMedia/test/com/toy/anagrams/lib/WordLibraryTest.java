@@ -31,48 +31,51 @@
 
 package com.toy.anagrams.lib;
 
+import java.util.Arrays;
+import junit.framework.TestCase;
+
 /**
- * Interface defining logic for the Anagram Game application.
+ * Test of the functionality of {@link WordLibrary}.
  */
-public abstract class WordLibrary {
-    /**
-     * Constructor for subclasses.
-     */
-    protected WordLibrary() {
+public class WordLibraryTest extends TestCase {
+    WordLibrary wordLibrary;
+
+    public WordLibraryTest(String testName) {
+        super(testName);
+    }
+
+    protected void setUp() throws Exception {
+        wordLibrary = WordLibrary.getDefault();
     }
     
-    /** Getter for the default implementation of the WordLibrary.
-     * @return some default implementation of WordLibrary
+    
+
+    /**
+     * Test of {@link WordLibrary#isCorrect}.
      */
-    public static WordLibrary getDefault() {
-        return StaticWordLibrary.DEFAULT;
+    public void testIsCorrect() {
+        for (int i = 0; i < wordLibrary.getSize(); i++) {
+            String clearWord = wordLibrary.getWord(i);
+            String scrambledWord = wordLibrary.getScrambledWord(i);
+            assertTrue("Scrambled word \"" + scrambledWord +
+                       "\" at index: " + i +
+                       " does not represent the word \"" + clearWord + "\"",
+                       isAnagram(clearWord, scrambledWord));
+        }
     }
 
     /**
-     * Gets the word at a given index.
-     * @param idx index of required word
-     * @return word at that index in its natural form
+     * Tests whether given anagram represents the word.
+     * @param clearWord The word in clear text
+     * @param scrambledWord Scrambled version of the word
+     * @return true if the scrambledWord is correct anagram of clearWord
      */
-    public abstract String getWord(int idx);
+    private boolean isAnagram(String clearWord, String scrambledWord) {
+        char[] clearArray = clearWord.toCharArray();
+        char[] scrambledArray = scrambledWord.toCharArray();
+        Arrays.sort(clearArray);
+        Arrays.sort(scrambledArray);
+        return Arrays.equals(clearArray, scrambledArray);
+    }
 
-    /**
-     * Gets the word at a given index in its scrambled form.
-     * @param idx index of required word
-     * @return word at that index in its scrambled form
-     */
-    public abstract String getScrambledWord(int idx);
-
-    /**
-     * Gets the number of words in the library.
-     * @return the total number of plain/scrambled word pairs in the library
-     */
-    public abstract int getSize();
-
-    /**
-     * Checks whether a user's guess for a word at the given index is correct.
-     * @param idx index of the word guessed
-     * @param userGuess the user's guess for the actual word
-     * @return true if the guess was correct; false otherwise
-     */
-    public abstract boolean isCorrect(int idx, String userGuess);
 }
